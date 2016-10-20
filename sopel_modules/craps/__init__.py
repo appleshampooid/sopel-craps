@@ -1,7 +1,7 @@
 from sopel import module
 import re
 import requests
-from .craps import CrapsGame
+from .game import CrapsGame
 
 def setup(bot):
     bot.memory['craps'] = CrapsGame(bot)

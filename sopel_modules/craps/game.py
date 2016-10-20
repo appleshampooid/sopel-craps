@@ -2,7 +2,7 @@ from enum import Enum
 import random
 from .bets import *
 
-class Craps:
+class CrapsGame:
     def __init__(self, bot):
         self.players = {}
         self.bot = bot
