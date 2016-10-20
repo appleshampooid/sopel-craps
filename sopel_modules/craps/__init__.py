@@ -1,10 +1,10 @@
 from sopel import module
 import re
 import requests
-from .craps import Craps
+from .craps import CrapsGame
 
 def setup(bot):
-    bot.memory['craps'] = Craps(bot)
+    bot.memory['craps'] = CrapsGame(bot)
 
 @module.commands('bet')
 def bet(bot, trigger):
