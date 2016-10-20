@@ -4,7 +4,7 @@ import requests
 from .game import CrapsGame
 
 def setup(bot):
-    bot.memory['craps'] = CrapsGame(bot)
+    bot.memory['craps'] = CrapsGame()
 
 @module.commands('bet')
 def bet(bot, trigger):

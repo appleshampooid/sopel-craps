@@ -27,11 +27,12 @@ class PassLineBet(Bet):
         if self.number:
             if roll.total == self.number:
                 msg = '{}, you won your pass line bet of {}'.format(self.player.nick, self.amount)
+                odds_win = 0
                 if self.odds != 0:
                     odds_win = self.odds_win(self.odds)
-                    msg += ' and your odds of {} won {}'.format(self.odds, win)
+                    msg += ' and your odds of {} won {}'.format(self.odds, odds_win)
                 bot.say('{}!'.format(msg))
-                self.player.bank += self.amount * 2 + self.odds + win
+                self.player.bank += self.amount * 2 + self.odds + odds_win
                 return False
             elif roll.total == 7:
                 msg = '{}, you lost your pass line bet of {}'.format(self.player.nick, self.amount)

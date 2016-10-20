@@ -3,9 +3,8 @@ import random
 from .bets import *
 
 class CrapsGame:
-    def __init__(self, bot):
+    def __init__(self):
         self.players = {}
-        self.bot = bot
         self.point = None
         self.bets = []
 
