@@ -36,11 +36,12 @@ class LineBet(Bet):
 
     def add_odds(self, odds):
         self.odds = odds
+        self.player.bank -= odds
 
     def eval(self, bot, craps, roll):
         if self.number:
             if roll.total == self.number:
-                msg = '{}, you won your TODO bet of {}'.format(self.player.nick, self.amount)
+                msg = '{}, you won your {} bet of {}'.format(self.player.nick, self.type(), self.amount)
                 odds_win = 0
                 if self.odds != 0:
                     odds_win = self.odds_win(self.odds)
@@ -49,7 +50,7 @@ class LineBet(Bet):
                 self.player.bank += self.amount * 2 + self.odds + odds_win
                 return False
             elif roll.total == 7:
-                msg = '{}, you lost your TODO bet of {}'.format(self.player.nick, self.amount)
+                msg = '{}, you lost your {} bet of {}'.format(self.player.nick, self.type(), self.amount)
                 if self.odds != 0:
                     msg += ' and odds of {}'.format(self.odds)
                 bot.say(msg)
@@ -58,22 +59,44 @@ class LineBet(Bet):
             if roll.is_point():
                 self.number = roll.total
             elif roll.total == 7 or roll.total == 11:
-                msg = '{}, you won your TODO bet of {}!'.format(self.player.nick, self.amount)
+                msg = '{}, you won your {} bet of {}!'.format(self.player.nick, self.type(), self.amount)
                 bot.say(msg)
                 self.player.bank += self.amount * 2
                 return False
             elif roll.is_crap():
-                msg = '{}, you lost your TODO bet of {}'.format(self.player.nick, self.amount)
+                msg = '{}, you lost your {} bet of {}'.format(self.player.nick, self.type(), self.amount)
                 bot.say(msg)
                 return False
         return True
 
+    def odds_string(self):
+        if self.odds:
+            return " with odds of {}".format(self.odds)
+        else:
+            return ''
+
 
 class Pass(LineBet):
+    def type(self):
+        return "pass line"
+    
     def to_string(self):
-        return '{} pass line bet (point is {})'.format(self.amount, self.number)
+        point_text = ''
+        if self.number:
+            point_text = 'point is {}'.format(self.number)
+        else:
+            point_text = 'no point'
+        return '{} pass line bet ({}){}'.format(self.amount, point_text, self.odds_string())
 
 class Come(LineBet):
+    def type(self):
+        return "come"
+
     def to_string(self):
-        return '{} come bet on the {}'.format(self.amount, self.number)
-    
+        number_text = ''
+        if self.number:
+            number_text = 'on the {}'.format(self.number)
+        else:
+            number_text = "(hasn't traveled)"
+        return '{} come bet {}{}'.format(self.amount, number_text, self.odds_string())
+

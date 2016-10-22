@@ -26,6 +26,24 @@ def bet(bot, trigger):
     # else:
     #     bot.say("Sorry, we don't take that kind of bet at this table.")
 
+@module.rule('(\d+) odds( on the (\d+))?')
+def odds(bot, trigger):
+    # bot.say("groups 1 2 3 are: {} {} {}".format(trigger.group(1),trigger.group(2),trigger.group(3)))
+    craps = bot.memory['craps']
+    amount = int(trigger.group(1))
+    player_bets = filter(lambda b: b.player.nick == trigger.nick , craps.bets)
+    if trigger.group(2):
+        number = int(trigger.group(3))
+    else:
+        number = craps.point
+    found = False
+    for b in player_bets:
+        if b.number == number:
+            b.add_odds(amount)
+            found = True
+    if not found:
+        bot.say("You don't have a bet on the {}!".format(number))
+    
 @module.commands('bets')
 def bets(bot, trigger):
     craps = bot.memory['craps']
